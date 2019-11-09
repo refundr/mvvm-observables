@@ -1,11 +1,3 @@
-//
-//  CurrencyViewModel.swift
-//  TemplateProject
-//
-//  Created by Benoit PASQUIER on 13/01/2018.
-//  Copyright © 2018 Benoit PASQUIER. All rights reserved.
-//
-
 import Foundation
 
 struct CurrencyViewModel {
@@ -31,6 +23,7 @@ struct CurrencyViewModel {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let converter) :
+                    print(converter.rates)
                     self.dataSource?.data.value = converter.rates
                 case .failure(let error) :
                     self.onErrorHandling?(error)

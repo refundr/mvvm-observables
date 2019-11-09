@@ -29,12 +29,12 @@ final class ParserHelper {
                         
                         // check foreach dictionary if parseable
                         switch T.parseObject(dictionary: dictionary) {
-                        case .failure(_): 
-                            continue
-                        case .success(let newModel):
-                            finalResult.append(newModel)
-                            break
-                        }
+                            case .failure(_):
+                                continue
+                            case .success(let newModel):
+                                finalResult.append(newModel)
+                                break
+                            }
                     }
                 }
                 

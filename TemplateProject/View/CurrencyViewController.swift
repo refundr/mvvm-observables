@@ -10,28 +10,30 @@ import UIKit
 
 class CurrencyViewController: UIViewController {
     
-    @IBOutlet weak var tableView : UITableView! 
-    
     let dataSource = CurrencyDataSource()
     
     lazy var viewModel : CurrencyViewModel = {
         let viewModel = CurrencyViewModel(dataSource: dataSource)
         return viewModel
     }()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        self.title = "£ Exchange rate"
+        view.backgroundColor = .white
         
-        self.tableView.dataSource = self.dataSource
+        tableView.dataSource = dataSource
+        tableView.delegate = dataSource
+        view.addSubview(tableView)
+        tableView.pin(to: view)
+        
+        self.title = "Exchange rate"
+        
         self.dataSource.data.addAndNotify(observer: self) { [weak self] _ in
             self?.tableView.reloadData()
         }
         
         // add error handling example
         self.viewModel.onErrorHandling = { [weak self] error in
-            // display error ?
             let controller = UIAlertController(title: "An error occured", message: "Oops, something went wrong!", preferredStyle: .alert)
             controller.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
             self?.present(controller, animated: true, completion: nil)
@@ -39,4 +41,27 @@ class CurrencyViewController: UIViewController {
         
         self.viewModel.fetchCurrencies()
     }
+    
+    let tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.separatorStyle = .singleLine
+        tableView.register(CurrencyCell.self, forCellReuseIdentifier: "CurrencyCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = 44;
+        return tableView
+    }()
+    
+    lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [tableView])
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        // stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0.0).isActive = true
+        stackView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0.0).isActive = true
+        stackView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0.0).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0.0).isActive = true
+        return stackView
+    }()
+    
 }

@@ -13,7 +13,7 @@ class GenericDataSource<T> : NSObject {
     var data: DynamicValue<[T]> = DynamicValue([])
 }
 
-class CurrencyDataSource : GenericDataSource<CurrencyRate>, UITableViewDataSource {
+class CurrencyDataSource : GenericDataSource<CurrencyRate>, UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -24,12 +24,11 @@ class CurrencyDataSource : GenericDataSource<CurrencyRate>, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CurrencyCell", for: indexPath) as! CurrencyCell
-        
+        guard let cell: CurrencyCell = tableView.dequeueReusableCell(withIdentifier: "CurrencyCell", for: indexPath as IndexPath) as? CurrencyCell else {
+            fatalError("CurrencyCell cell is not found")
+        }
         let currencyRate = self.data.value[indexPath.row]
         cell.currencyRate = currencyRate
-        
         return cell
     }
 }
